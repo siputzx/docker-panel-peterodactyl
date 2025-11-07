@@ -96,5 +96,5 @@ WORKDIR     /home/container
 COPY        --chown=container:container ./../entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
 
-ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
+ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
 CMD         ["/entrypoint.sh"]
