@@ -1,4 +1,4 @@
-FROM        --platform=$TARGETOS/$TARGETARCH node:20-bookworm-slim
+FROM        --platform=$TARGETOS/$TARGETARCH node:25-bookworm-slim
 LABEL author="siputzx" maintainer="custom@pterodactyl.io"
 
 RUN useradd -m -d /home/container container
