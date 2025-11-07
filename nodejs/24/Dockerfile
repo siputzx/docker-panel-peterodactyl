@@ -72,10 +72,9 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-RUN npm install --global npm@latest typescript ts-node @types/node
-RUN npm install -g corepack \
-    && corepack enable \
-    && corepack prepare pnpm@latest --activate
+RUN npm install -g corepack
+RUN corepack enable
+RUN corepack prepare pnpm@latest --activate
 
 USER container
 ENV USER=container HOME=/home/container
