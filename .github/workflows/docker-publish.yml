@@ -18,13 +18,12 @@ jobs:
     permissions:
       contents: read
       packages: write
-      attestations: write
       id-token: write
 
     strategy:
       fail-fast: false
       matrix:
-        node-version: [24, 23, 22, 21, 20, 19, 18]
+        node-version: [25, 24, 23, 22, 21, 20, 19, 18]
 
     steps:
       - name: Checkout repository
@@ -33,10 +32,8 @@ jobs:
       - name: Check if Dockerfile exists
         run: |
           if [ ! -f "nodejs/${{ matrix.node-version }}/Dockerfile" ]; then
-            echo "❌ Dockerfile not found for Node.js ${{ matrix.node-version }}"
             exit 1
           fi
-          echo "✅ Found Dockerfile for Node.js ${{ matrix.node-version }}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -55,18 +52,13 @@ jobs:
         id: push
         uses: docker/build-push-action@v5
         with:
-          context: ./nodejs/${{ matrix.node-version }}
+          context: .
           file: ./nodejs/${{ matrix.node-version }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/siputzx/panel:nodejs_${{ matrix.node-version }}
+            ghcr.io/siputzx/panel:node_${{ matrix.node-version }}
           cache-from: type=gha,scope=nodejs${{ matrix.node-version }}
           cache-to: type=gha,mode=max,scope=nodejs${{ matrix.node-version }}
-
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ghcr.io/siputzx/panel
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          provenance: false
+          sbom: false
