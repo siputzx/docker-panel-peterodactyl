@@ -1,4 +1,4 @@
-FROM        --platform=$TARGETOS/$TARGETARCH node:22-bookworm-slim
+FROM        --platform=$TARGETOS/$TARGETARCH node:18-bookworm-slim
 LABEL       author="Enhanced Build" maintainer="custom@pterodactyl.io"
 
 # Add container user and set stop signal
