@@ -72,7 +72,7 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-RUN npm install -g corepack
+RUN npm install -g corepack@latest
 RUN corepack enable
 RUN corepack prepare pnpm@latest --activate
 
