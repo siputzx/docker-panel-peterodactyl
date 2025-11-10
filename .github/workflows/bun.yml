@@ -31,7 +31,6 @@ jobs:
 
       - name: Check if Bun Dockerfile exists
         run: |
-          # Mengganti path ke folder bun dan menggunakan variabel bun-version
           if [ ! -f "bun/${{ matrix.bun-version }}/Dockerfile" ]; then
             echo "Dockerfile not found: bun/${{ matrix.bun-version }}/Dockerfile"
             exit 1
