@@ -1,4 +1,4 @@
-FROM        --platform=$TARGETOS/$TARGETARCH oven/bun:canary
+FROM        --platform=$TARGETOS/$TARGETARCH oven/bun:1
 LABEL       author="siputzx" maintainer="custom@pterodactyl.io"
 
 RUN         useradd -m -d /home/container container
