@@ -72,9 +72,6 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
-
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
