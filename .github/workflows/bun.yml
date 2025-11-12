@@ -58,7 +58,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            # Mengganti tag dari node_ menjadi bun_
             ghcr.io/siputzx/panel:bun_${{ matrix.bun-version }}
           cache-from: type=gha,scope=bun${{ matrix.bun-version }}
           cache-to: type=gha,mode=max,scope=bun${{ matrix.bun-version }}
