@@ -161,6 +161,7 @@ RUN useradd -m -d /home/container container
 STOPSIGNAL SIGINT
 
 ENV PATH="/home/container/.local/bin:/opt/uv:/opt/bun/bin:/opt/cargo/bin:/usr/local/go/bin:${PATH}" \
+    PIP_BREAK_SYSTEM_PACKAGES=1 \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
