@@ -62,12 +62,26 @@ mag='\033[1;35m'
 white='\033[1;37m'
 reset='\033[0m'
 
+print_logo() {
+    local term_cols="${COLUMNS:-80}"
+
+    if command -v tput >/dev/null 2>&1; then
+        term_cols="$(tput cols 2>/dev/null || echo "${term_cols}")"
+    fi
+
+    if ! [[ "$term_cols" =~ ^[0-9]+$ ]] || [ "$term_cols" -lt 40 ]; then
+        term_cols=80
+    fi
+
+    if command -v figlet >/dev/null 2>&1; then
+        figlet -f small -w "$term_cols" "TOKOPTERO" | sed "s/^/${mag}/; s/$/${reset}/"
+    else
+        printf "${mag}TOKOPTERO${reset}\n"
+    fi
+}
+
 printf "\033c"
-printf "${mag} _____ ___  _  ______  ____ _____ _____ ____   ___  ${reset}\n"
-printf "${mag}|_   _/ _ \\| |/ / __ \\/ __ \_   _| ____|  _ \\ / _ \\ ${reset}\n"
-printf "${mag}  | || | | | ' / |  | |  | || | |  _| | |_) | | | |${reset}\n"
-printf "${mag}  | || |_| | . \\ |__| |__| || | | |___|  _ <| |_| |${reset}\n"
-printf "${mag}  |_| \\___/|_|\\_\\____/\\____/ |_| |_____|_| \\_\\___/ ${reset}\n"
+print_logo
 printf "\n"
 printf "${cyan}%s${reset} for ${green}%s${reset} running ${cyan}Debian Linux %s${reset}\n" "Universal Environment" "$host_name" "$kernel"
 printf "\n"

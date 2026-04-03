@@ -16,6 +16,7 @@ RUN apt-get update \
         curl \
         dnsutils \
         ffmpeg \
+        figlet \
         fonts-liberation \
         g++ \
         gcc \
