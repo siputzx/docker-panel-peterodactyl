@@ -23,7 +23,6 @@ RUN apt-get update \
         gcc \
         git \
         gnupg \
-        htop \
         imagemagick \
         iproute2 \
         iputils-ping \
@@ -51,19 +50,16 @@ RUN apt-get update \
         nano \
         neofetch \
         net-tools \
-        nmap \
         procps \
         python3 \
         python3-dev \
         python3-pip \
         python3-venv \
         rsync \
-        screen \
         sqlite3 \
         tar \
         tcpdump \
         tini \
-        tmux \
         traceroute \
         tree \
         tzdata \
