@@ -9,8 +9,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
 RUN apt-get update \
-    && ASOUND_PKG="libasound2" \
-    && if ! apt-cache show libasound2 >/dev/null 2>&1; then ASOUND_PKG="libasound2t64"; fi \
     && apt-get install -y --no-install-recommends \
         apt-transport-https \
         bash \
@@ -33,7 +31,6 @@ RUN apt-get update \
         iproute2 \
         iputils-ping \
         jq \
-        ${ASOUND_PKG} \
         libatk-bridge2.0-0 \
         libdbus-1-3 \
         libdrm2 \
