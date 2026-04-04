@@ -191,9 +191,9 @@ ENV PATH="/home/container/.local/bin:/opt/uv:/opt/bun/bin:/opt/cargo/bin:/usr/lo
     RUSTUP_HOME=/opt/rustup \
     CARGO_HOME=/opt/cargo
 
-COPY --chown=container:container ./universal/debian/entrypoint.sh /entrypoint.sh
-COPY --chown=container:container ./universal/debian/tokoptero-banner.sh /usr/local/bin/tokoptero-banner
-COPY --chown=container:container ./universal/debian/tokoptero-shell.sh /etc/profile.d/tokoptero-shell.sh
+COPY --chown=container:container ./universal/core/entrypoint.sh /entrypoint.sh
+COPY --chown=container:container ./universal/core/tokoptero-banner.sh /usr/local/bin/tokoptero-banner
+COPY --chown=container:container ./universal/core/tokoptero-shell.sh /etc/profile.d/tokoptero-shell.sh
 
 RUN chmod +x /entrypoint.sh /usr/local/bin/tokoptero-banner /etc/profile.d/tokoptero-shell.sh \
     && mkdir -p /ms-playwright \
