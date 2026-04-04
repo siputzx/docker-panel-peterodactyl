@@ -60,6 +60,23 @@ cpu_usage() {
 load_now="$(cpu_usage)"
 last_login_ip="${INTERNAL_IP:-127.0.0.1}"
 
+if [ -z "${CLOUDFLARE_PUBLIC_URL:-}" ]; then
+    for cf_log in /home/container/cloudflared.log /tmp/cloudflared.log; do
+        if [ -f "$cf_log" ]; then
+            CLOUDFLARE_PUBLIC_URL="$(grep -Eo 'https://[-a-zA-Z0-9]+\.trycloudflare\.com' "$cf_log" | head -n 1 || true)"
+            if [ -n "${CLOUDFLARE_PUBLIC_URL}" ]; then
+                export CLOUDFLARE_PUBLIC_URL
+                break
+            fi
+        fi
+    done
+fi
+
+if [ -z "${CLOUDFLARE_PUBLIC_URL:-}" ] && [ -n "${CLOUDFLARE_HOSTNAME:-}" ]; then
+    CLOUDFLARE_PUBLIC_URL="https://${CLOUDFLARE_HOSTNAME}"
+    export CLOUDFLARE_PUBLIC_URL
+fi
+
 cyan=$'\e[1;36m'
 green=$'\e[1;32m'
 mag=$'\e[1;35m'
