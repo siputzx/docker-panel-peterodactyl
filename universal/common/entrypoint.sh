@@ -11,6 +11,14 @@ export INTERNAL_IP
 
 mkdir -p /home/container/.local/bin /home/container/auth /home/container/user/data >/dev/null 2>&1 || true
 
+if [ -x /usr/bin/chromium ]; then
+    export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+elif [ -x /usr/bin/google-chrome ]; then
+    export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+elif [ -x /usr/bin/google-chrome-stable ]; then
+    export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+fi
+
 if command -v uv >/dev/null 2>&1; then
     uv tool install --force yt-dlp >/tmp/yt-dlp-install.log 2>&1 || python3 -m pip install --user --no-cache-dir -U yt-dlp >>/tmp/yt-dlp-install.log 2>&1 || true
 else

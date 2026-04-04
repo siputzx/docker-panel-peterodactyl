@@ -11,7 +11,6 @@ apt-get update \
     bash \
     build-essential \
     ca-certificates \
-    chromium \
     curl \
     dnsutils \
     composer \
