@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export LANG=C.UTF-8
+export LANGUAGE=C.UTF-8
+export LC_ALL=C.UTF-8
 export PATH="/home/container/tokoptero-sys/usr/bin:/home/container/tokoptero-sys/usr/local/bin:${HOME}/.local/bin:/home/container/.local/bin:${PATH}"
 export LD_LIBRARY_PATH="/home/container/tokoptero-sys/usr/lib:${LD_LIBRARY_PATH}"
 export HOSTNAME="tokoptero"

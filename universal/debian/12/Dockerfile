@@ -18,7 +18,10 @@ RUN apt-get update
 RUN useradd -m -d /home/container container
 STOPSIGNAL SIGINT
 
-ENV PATH="/home/container/.local/bin:/opt/uv:/opt/bun/bin:/opt/cargo/bin:/usr/local/go/bin:${PATH}" \
+ENV LANG=C.UTF-8 \
+    LANGUAGE=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PATH="/home/container/.local/bin:/opt/uv:/opt/bun/bin:/opt/cargo/bin:/usr/local/go/bin:${PATH}" \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     PIP_BREAK_SYSTEM_PACKAGES=1 \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
