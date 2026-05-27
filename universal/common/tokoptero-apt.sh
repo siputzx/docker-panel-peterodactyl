@@ -68,6 +68,77 @@ update_cache() {
     echo "✓ apt cache updated"
 }
 
+search_pkg() {
+    [ $# -eq 0 ] && { echo "Usage: tokoptero-apt search <query>"; return 1; }
+    apt-cache search "$@" | grep --color=never . || echo "No results for: $*"
+}
+
+show_pkg() {
+    [ $# -eq 0 ] && { echo "Usage: tokoptero-apt show <package>"; return 1; }
+    apt-cache show "$@" || echo "Package not found: $*"
+}
+
+upgrade_pkgs() {
+    if [ ! -f "${MANIFEST}" ] || [ ! -s "${MANIFEST}" ]; then
+        echo "No packages in manifest to upgrade."
+        return 0
+    fi
+    echo "Checking for upgrades..."
+    total=$(wc -l < "${MANIFEST}")
+    upgraded=0
+    while IFS= read -r pkg; do
+        [ -z "$pkg" ] && continue
+        cur_deb=$(ls "${PKG_DIR}/${pkg}"_*.deb 2>/dev/null | head -1)
+        cur_ver=""
+        [ -n "$cur_deb" ] && cur_ver=$(dpkg-deb --field "$cur_deb" Version 2>/dev/null || echo "")
+        apt_ver=$(apt-cache show "$pkg" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}')
+        if [ -n "$apt_ver" ] && [ "$apt_ver" != "$cur_ver" ]; then
+            echo "→ Upgrading ${pkg}: ${cur_ver:-none} → ${apt_ver}"
+            tmpdir=$(mktemp -d)
+            cd "$tmpdir" || continue
+            if apt download "$pkg" 2>/dev/null; then
+                new_deb=$(ls "${pkg}"_*.deb 2>/dev/null | head -1)
+                if [ -n "$new_deb" ]; then
+                    dpkg --force-all -x "$new_deb" "${TOKOPTERO_SYS}/" 2>/dev/null
+                    cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
+                    mv "$new_deb" "${PKG_DIR}/"
+                    rm -f "$cur_deb"
+                    upgraded=$((upgraded + 1))
+                    echo "✓ ${pkg} upgraded"
+                fi
+            fi
+            rm -rf "$tmpdir"
+        fi
+    done < "${MANIFEST}"
+    echo "Done: ${upgraded}/${total} packages upgraded"
+}
+
+source_add() {
+    if [ $# -lt 2 ]; then
+        echo "Usage: tokoptero-apt source-add <name> <gpg-key-url> <sources-line>"
+        echo ""
+        echo "Example:"
+        echo "  tokoptero-apt source-add docker https://download.docker.com/linux/debian/gpg \\"
+        echo "    'deb [signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable'"
+        return 1
+    fi
+    name="$1"
+    gpg_url="$2"
+    sources_line="$3"
+    keyring="/usr/share/keyrings/${name}.gpg"
+    sourcelist="/etc/apt/sources.list.d/${name}.list"
+
+    echo "→ Adding source: ${name}"
+    mkdir -p /usr/share/keyrings /etc/apt/sources.list.d 2>/dev/null || true
+    if curl -fsSL "$gpg_url" | gpg --dearmor -o "$keyring" 2>/dev/null; then
+        echo "$sources_line" > "$sourcelist"
+        echo "✓ Source ${name} added. Run 'tokoptero-apt update' to refresh."
+    else
+        echo "✗ Failed to add GPG key from: $gpg_url"
+        return 1
+    fi
+}
+
 install_deb() {
     [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install-deb <url...>"; return 1; }
     ensure_dirs
@@ -104,6 +175,10 @@ case "${1:-}" in
     remove)      shift; remove_pkg "$@" ;;
     list)        list_pkgs ;;
     update)      update_cache ;;
+    search)      shift; search_pkg "$@" ;;
+    show)        shift; show_pkg "$@" ;;
+    upgrade)     upgrade_pkgs ;;
+    source-add)  shift; source_add "$@" ;;
     *)
         echo "tokoptero-apt — Persistent package manager"
         echo ""
@@ -112,6 +187,11 @@ case "${1:-}" in
         echo "  tokoptero-apt install-deb <url...>  Install .deb from URL (persistent)"
         echo "  tokoptero-apt remove  <pkg...>      Remove package from manifest"
         echo "  tokoptero-apt list                  List installed packages"
+        echo "  tokoptero-apt search <query>        Search apt repositories"
+        echo "  tokoptero-apt show  <pkg>           Show package details"
+        echo "  tokoptero-apt upgrade               Upgrade all installed packages"
         echo "  tokoptero-apt update                Update apt cache"
+        echo "  tokoptero-apt source-add <name> <key-url> <sources-line>"
+        echo "                                     Add external repository"
         ;;
 esac
