@@ -68,18 +68,50 @@ update_cache() {
     echo "✓ apt cache updated"
 }
 
+install_deb() {
+    [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install-deb <url...>"; return 1; }
+    ensure_dirs
+    for url in "$@"; do
+        echo "→ Downloading from ${url}..."
+        tmpdir=$(mktemp -d)
+        cd "$tmpdir" || die "cd failed"
+        filename=$(basename "$url")
+        if ! curl -fsSL -o "$filename" "$url"; then
+            echo "✗ Download failed: $url"
+            rm -rf "$tmpdir"
+            continue
+        fi
+        if [[ "$filename" != *.deb ]]; then
+            echo "✗ Not a .deb file: $filename"
+            rm -rf "$tmpdir"
+            continue
+        fi
+        pkgname=$(dpkg-deb --field "$filename" Package 2>/dev/null || echo "${filename%.deb}")
+        echo "→ Extracting ${pkgname}..."
+        dpkg -x "$filename" "${TOKOPTERO_SYS}/" 2>/dev/null
+        cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
+        cp "$filename" "${PKG_DIR}/"
+        echo "${pkgname}" >> "${MANIFEST}"
+        sort -u "${MANIFEST}" -o "${MANIFEST}"
+        rm -rf "$tmpdir"
+        echo "✓ ${pkgname} installed from external .deb"
+    done
+}
+
 case "${1:-}" in
-    install) shift; install_pkg "$@" ;;
-    remove)   shift; remove_pkg "$@" ;;
-    list)     list_pkgs ;;
-    update)   update_cache ;;
+    install)     shift; install_pkg "$@" ;;
+    install-deb) shift; install_deb "$@" ;;
+    remove)      shift; remove_pkg "$@" ;;
+    list)        list_pkgs ;;
+    update)      update_cache ;;
     *)
         echo "tokoptero-apt — Persistent package manager"
         echo ""
         echo "Usage:"
-        echo "  tokoptero-apt install <pkg...>  Install package (persists across restarts)"
-        echo "  tokoptero-apt remove  <pkg...>  Remove package from manifest"
-        echo "  tokoptero-apt list              List installed packages"
-        echo "  tokoptero-apt update            Update apt cache"
+        echo "  tokoptero-apt install <pkg...>      Install package from apt repo (persistent)"
+        echo "  tokoptero-apt install-deb <url...>  Install .deb from URL (persistent)"
+        echo "  tokoptero-apt remove  <pkg...>      Remove package from manifest"
+        echo "  tokoptero-apt list                  List installed packages"
+        echo "  tokoptero-apt update                Update apt cache"
         ;;
 esac
