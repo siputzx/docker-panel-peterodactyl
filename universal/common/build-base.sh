@@ -87,16 +87,18 @@ apt-get update \
     zip \
   && rm -rf /var/lib/apt/lists/*
 
-# Try to upgrade PHP to 8.5 via Sury repo (non-fatal if unsupported distro)
+# Upgrade PHP to 8.5 via Sury repo (optional, falls back to distro PHP)
 CODENAME="$(lsb_release -sc 2>/dev/null || echo unknown)"
-mkdir -p /etc/apt/keyrings \
+if ! mkdir -p /etc/apt/keyrings \
   && curl -fsSL https://packages.sury.org/php/apt.gpg -o /etc/apt/keyrings/sury-php.gpg \
   && echo "deb [signed-by=/etc/apt/keyrings/sury-php.gpg] https://packages.sury.org/php/ ${CODENAME} main" > /etc/apt/sources.list.d/sury-php.list \
   && apt-get update \
   && apt-get install -y --no-install-recommends php8.5-cli php8.5-curl php8.5-mbstring php8.5-xml \
-  && apt-mark auto php8.5-cli php8.5-curl php8.5-mbstring php8.5-xml \
-  && rm -rf /var/lib/apt/lists/* \
-  || echo "PHP 8.5 from Sury not available for ${CODENAME}, keeping distro PHP"
+  && apt-mark auto php8.5-cli php8.5-curl php8.5-mbstring php8.5-xml; then
+  : # PHP 8.5 installed successfully
+else
+  echo "PHP 8.5 from Sury repo not available for ${CODENAME}, keeping distro PHP"
+fi
 
 mkdir -p /etc/apt/keyrings \
   && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
