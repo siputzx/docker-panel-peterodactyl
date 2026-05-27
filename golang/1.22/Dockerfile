@@ -24,9 +24,13 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
     GO111MODULE=on \
     CGO_ENABLED=1 \
     GOOS=linux
+
+RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 
 USER container
 ENV USER=container HOME=/home/container
