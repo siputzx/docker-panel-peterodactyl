@@ -14,6 +14,8 @@ RUN apt-get update \
     && if [ -n "$CHROMIUM_CANDIDATE" ] && [ "$CHROMIUM_CANDIDATE" != "(none)" ]; then apt-get install -y --no-install-recommends chromium; fi \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update
+
 RUN useradd -m -d /home/container container
 STOPSIGNAL SIGINT
 

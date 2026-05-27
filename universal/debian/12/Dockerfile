@@ -13,6 +13,8 @@ RUN apt-get update \
     && if apt-cache show chromium >/dev/null 2>&1; then apt-get install -y --no-install-recommends chromium; fi \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update
+
 RUN useradd -m -d /home/container container
 STOPSIGNAL SIGINT
 
