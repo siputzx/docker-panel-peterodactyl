@@ -11,6 +11,14 @@ export INTERNAL_IP
 
 mkdir -p /home/container/.local/bin /home/container/auth /home/container/user/data >/dev/null 2>&1 || true
 
+# Restore persistent packages (VPS-like system)
+TOKOPTERO_SYS="/home/container/tokoptero-sys"
+if [ -d "${TOKOPTERO_SYS}/usr" ]; then
+    cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
+fi
+export PATH="${TOKOPTERO_SYS}/usr/bin:${TOKOPTERO_SYS}/usr/local/bin:${HOME}/.local/bin:${PATH}"
+export LD_LIBRARY_PATH="${TOKOPTERO_SYS}/usr/lib:${LD_LIBRARY_PATH}"
+
 if [ -x /usr/bin/chromium ]; then
     export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 elif [ -x /usr/bin/google-chrome ]; then
