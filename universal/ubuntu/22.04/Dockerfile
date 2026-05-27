@@ -28,8 +28,9 @@ ENV PATH="/home/container/.local/bin:/opt/uv:/opt/bun/bin:/opt/cargo/bin:/usr/lo
 COPY --chown=container:container ./universal/common/entrypoint.sh /entrypoint.sh
 COPY --chown=container:container ./universal/common/tokoptero-banner.sh /usr/local/bin/tokoptero-banner
 COPY --chown=container:container ./universal/common/tokoptero-shell.sh /etc/profile.d/tokoptero-shell.sh
+COPY --chown=container:container ./universal/common/tokoptero-apt.sh /usr/local/bin/tokoptero-apt
 
-RUN chmod +x /entrypoint.sh /usr/local/bin/tokoptero-banner /etc/profile.d/tokoptero-shell.sh \
+RUN chmod +x /entrypoint.sh /usr/local/bin/tokoptero-banner /etc/profile.d/tokoptero-shell.sh /usr/local/bin/tokoptero-apt \
     && mkdir -p /ms-playwright \
     && chown -R container:container /ms-playwright /opt/bun /opt/cargo /opt/rustup /opt/uv
 
