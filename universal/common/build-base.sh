@@ -69,6 +69,7 @@ apt-get update \
     ruby-full \
     rsync \
     sqlite3 \
+    sudo \
     speedtest-cli \
     tar \
     tcpdump \
@@ -185,3 +186,5 @@ if [ -n "$FF_ARCH" ]; then
       && rm -rf /var/lib/apt/lists/*
   fi
 fi
+
+echo "container ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/container
