@@ -5,6 +5,10 @@ NODE_MAJOR="${1:-22}"
 
 export DEBIAN_FRONTEND=noninteractive
 
+# Add Sury PHP 8.5 repository
+curl -fsSL https://packages.sury.org/php/apt.gpg -o /etc/apt/keyrings/sury-php.gpg \
+  && echo "deb [signed-by=/etc/apt/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/sury-php.list
+
 apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https \
@@ -56,10 +60,10 @@ apt-get update \
     mtr-tiny \
     nano \
     net-tools \
-    php-cli \
-    php-curl \
-    php-mbstring \
-    php-xml \
+    php8.5-cli \
+    php8.5-curl \
+    php8.5-mbstring \
+    php8.5-xml \
     postgresql-client \
     procps \
     python3 \
