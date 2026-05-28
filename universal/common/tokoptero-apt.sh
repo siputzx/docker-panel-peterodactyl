@@ -5,7 +5,7 @@
 # List:    tokoptero-apt list
 # Update:  tokoptero-apt update
 
-TOKOPTERO_SYS="/home/container/tokoptero-sys"
+TOKOPTERO_SYS="/home/container/.tokoptero"
 PKG_DIR="${TOKOPTERO_SYS}/pkgs"
 MANIFEST="${TOKOPTERO_SYS}/manifest"
 TMPDIR="${TOKOPTERO_SYS}/.tmp"
