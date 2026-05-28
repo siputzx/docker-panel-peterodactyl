@@ -19,7 +19,7 @@ RUN apt-get update \
 
 RUN apt-get update
 
-RUN useradd -m -d /home/container container
+RUN useradd -m -d /home/container -s /bin/bash container
 STOPSIGNAL SIGINT
 
 ENV LANG=C.UTF-8 \

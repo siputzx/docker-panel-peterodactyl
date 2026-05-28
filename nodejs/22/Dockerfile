@@ -1,7 +1,7 @@
 FROM        --platform=$TARGETOS/$TARGETARCH node:22-bookworm-slim
 LABEL author="siputzx" maintainer="custom@pterodactyl.io"
 
-RUN useradd -m -d /home/container container
+RUN useradd -m -d /home/container -s /bin/bash container
 STOPSIGNAL SIGINT
 
 RUN apt update \
