@@ -192,3 +192,6 @@ echo "container ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/container
 # Allow user to add apt sources without sudo
 chmod 777 /usr/share/keyrings 2>/dev/null || true
 chmod 777 /etc/apt/sources.list.d 2>/dev/null || true
+
+# Give container user full write access to system dirs (VPS-like)
+chmod 777 /usr/bin /usr/lib /usr/lib64 /usr/share /usr/local 2>/dev/null || true
