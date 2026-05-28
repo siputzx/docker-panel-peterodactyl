@@ -19,7 +19,7 @@ export TZ
 INTERNAL_IP=$(ip route get 1 2>/dev/null | awk '{print $(NF-2); exit}')
 export INTERNAL_IP
 
-mkdir -p /home/container/.local/bin /home/container/auth /home/container/user/data >/dev/null 2>&1 || true
+mkdir -p /home/container/.tokoptero/{local/bin,auth,user/data,tmp} >/dev/null 2>&1 || true
 
 # Restore persistent packages (VPS-like system)
 TOKOPTERO_SYS="/home/container/.tokoptero"
