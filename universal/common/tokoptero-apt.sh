@@ -8,29 +8,34 @@
 TOKOPTERO_SYS="/home/container/tokoptero-sys"
 PKG_DIR="${TOKOPTERO_SYS}/pkgs"
 MANIFEST="${TOKOPTERO_SYS}/manifest"
+TMPDIR="${TOKOPTERO_SYS}/.tmp"
 
 die() { echo "✗ $*" >&2; return 1; }
 
 ensure_dirs() {
-    mkdir -p "${TOKOPTERO_SYS}/usr/bin" "${TOKOPTERO_SYS}/usr/lib" "${TOKOPTERO_SYS}/usr/local/bin" "${PKG_DIR}"
+    mkdir -p "${TOKOPTERO_SYS}/usr/bin" "${TOKOPTERO_SYS}/usr/lib" "${TOKOPTERO_SYS}/usr/local/bin" "${PKG_DIR}" "${TMPDIR}"
+}
+
+clean_tmp() {
+    rm -rf "${TMPDIR:?}/"* 2>/dev/null || true
 }
 
 install_pkg() {
     [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install <package...>"; return 1; }
     ensure_dirs
+    clean_tmp
     for pkg in "$@"; do
         echo "→ Installing ${pkg}..."
-        tmpdir=$(mktemp -d)
-        cd "$tmpdir" || die "cd failed"
+        cd "${TMPDIR}" || die "cd failed"
         if ! apt download "$pkg" 2>/dev/null; then
             echo "✗ ${pkg}: not found in apt repositories"
-            rm -rf "$tmpdir"
+            clean_tmp
             continue
         fi
         deb=$(ls "${pkg}"_*.deb 2>/dev/null | head -1)
         if [ -z "$deb" ]; then
             echo "✗ ${pkg}: download failed"
-            rm -rf "$tmpdir"
+            clean_tmp
             continue
         fi
         dpkg --force-all -x "$deb" "${TOKOPTERO_SYS}/" 2>/dev/null
@@ -38,7 +43,7 @@ install_pkg() {
         cp "$deb" "${PKG_DIR}/"
         echo "${pkg}" >> "${MANIFEST}"
         sort -u "${MANIFEST}" -o "${MANIFEST}"
-        rm -rf "$tmpdir"
+        clean_tmp
         echo "✓ ${pkg} installed"
     done
 }
@@ -94,8 +99,8 @@ upgrade_pkgs() {
         apt_ver=$(apt-cache show "$pkg" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}')
         if [ -n "$apt_ver" ] && [ "$apt_ver" != "$cur_ver" ]; then
             echo "→ Upgrading ${pkg}: ${cur_ver:-none} → ${apt_ver}"
-            tmpdir=$(mktemp -d)
-            cd "$tmpdir" || continue
+            clean_tmp
+            cd "${TMPDIR}" || continue
             if apt download "$pkg" 2>/dev/null; then
                 new_deb=$(ls "${pkg}"_*.deb 2>/dev/null | head -1)
                 if [ -n "$new_deb" ]; then
@@ -107,7 +112,7 @@ upgrade_pkgs() {
                     echo "✓ ${pkg} upgraded"
                 fi
             fi
-            rm -rf "$tmpdir"
+            clean_tmp
         fi
     done < "${MANIFEST}"
     echo "Done: ${upgraded}/${total} packages upgraded"
@@ -142,19 +147,19 @@ source_add() {
 install_deb() {
     [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install-deb <url>"; return 1; }
     ensure_dirs
+    clean_tmp
     url="$*"
     echo "→ Downloading from ${url}..."
-    tmpdir=$(mktemp -d)
-    cd "$tmpdir" || die "cd failed"
+    cd "${TMPDIR}" || die "cd failed"
     filename=$(basename "$url")
-    if ! curl -fsSL -o "$filename" "$url" 2>/tmp/tokoptero-curl.log; then
-        echo "✗ Download failed: $(cat /tmp/tokoptero-curl.log 2>/dev/null)"
-        rm -rf "$tmpdir"
+    if ! curl -fsSL -o "$filename" "$url" 2>"${TMPDIR}/curl.log"; then
+        echo "✗ Download failed: $(cat "${TMPDIR}/curl.log" 2>/dev/null)"
+        clean_tmp
         return 1
     fi
-        if [[ "$filename" != *.deb ]]; then
+    if [[ "$filename" != *.deb ]]; then
         echo "✗ Not a .deb file: $filename"
-        rm -rf "$tmpdir"
+        clean_tmp
         return 1
     fi
     pkgname=$(dpkg-deb --field "$filename" Package 2>/dev/null || echo "${filename%.deb}")
@@ -164,7 +169,7 @@ install_deb() {
     cp "$filename" "${PKG_DIR}/"
     echo "${pkgname}" >> "${MANIFEST}"
     sort -u "${MANIFEST}" -o "${MANIFEST}"
-    rm -rf "$tmpdir"
+    clean_tmp
     echo "✓ ${pkgname} installed from external .deb"
 }
 
