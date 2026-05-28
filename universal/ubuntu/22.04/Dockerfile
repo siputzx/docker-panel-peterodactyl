@@ -9,10 +9,7 @@ ENV TZ=UTC
 COPY ./universal/common/build-base.sh /tmp/build-base.sh
 RUN chmod +x /tmp/build-base.sh && /tmp/build-base.sh "$NODE_MAJOR" && rm -f /tmp/build-base.sh
 
-RUN apt-get update \
-    && CHROMIUM_CANDIDATE="$(apt-cache policy chromium | awk '/Candidate:/ {print $2}')" \
-    && if [ -n "$CHROMIUM_CANDIDATE" ] && [ "$CHROMIUM_CANDIDATE" != "(none)" ]; then apt-get install -y --no-install-recommends chromium; fi \
-    && rm -rf /var/lib/apt/lists/*
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update
 
