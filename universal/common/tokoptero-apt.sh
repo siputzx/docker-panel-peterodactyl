@@ -140,33 +140,32 @@ source_add() {
 }
 
 install_deb() {
-    [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install-deb <url...>"; return 1; }
+    [ $# -eq 0 ] && { echo "Usage: tokoptero-apt install-deb <url>"; return 1; }
     ensure_dirs
-    for url in "$@"; do
-        echo "→ Downloading from ${url}..."
-        tmpdir=$(mktemp -d)
-        cd "$tmpdir" || die "cd failed"
-        filename=$(basename "$url")
-        if ! curl -fsSL -o "$filename" "$url"; then
-            echo "✗ Download failed: $url"
-            rm -rf "$tmpdir"
-            continue
-        fi
-        if [[ "$filename" != *.deb ]]; then
-            echo "✗ Not a .deb file: $filename"
-            rm -rf "$tmpdir"
-            continue
-        fi
-        pkgname=$(dpkg-deb --field "$filename" Package 2>/dev/null || echo "${filename%.deb}")
-        echo "→ Extracting ${pkgname}..."
-        dpkg -x "$filename" "${TOKOPTERO_SYS}/" 2>/dev/null
-        cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
-        cp "$filename" "${PKG_DIR}/"
-        echo "${pkgname}" >> "${MANIFEST}"
-        sort -u "${MANIFEST}" -o "${MANIFEST}"
+    url="$*"
+    echo "→ Downloading from ${url}..."
+    tmpdir=$(mktemp -d)
+    cd "$tmpdir" || die "cd failed"
+    filename=$(basename "$url")
+    if ! curl -fsSL -o "$filename" "$url" 2>/tmp/tokoptero-curl.log; then
+        echo "✗ Download failed: $(cat /tmp/tokoptero-curl.log 2>/dev/null)"
         rm -rf "$tmpdir"
-        echo "✓ ${pkgname} installed from external .deb"
-    done
+        return 1
+    fi
+        if [[ "$filename" != *.deb ]]; then
+        echo "✗ Not a .deb file: $filename"
+        rm -rf "$tmpdir"
+        return 1
+    fi
+    pkgname=$(dpkg-deb --field "$filename" Package 2>/dev/null || echo "${filename%.deb}")
+    echo "→ Extracting ${pkgname}..."
+    dpkg -x "$filename" "${TOKOPTERO_SYS}/" 2>/dev/null
+    cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
+    cp "$filename" "${PKG_DIR}/"
+    echo "${pkgname}" >> "${MANIFEST}"
+    sort -u "${MANIFEST}" -o "${MANIFEST}"
+    rm -rf "$tmpdir"
+    echo "✓ ${pkgname} installed from external .deb"
 }
 
 case "${1:-}" in
