@@ -9,7 +9,13 @@ ENV TZ=UTC
 COPY ./universal/common/build-base.sh /tmp/build-base.sh
 RUN chmod +x /tmp/build-base.sh && /tmp/build-base.sh "$NODE_MAJOR" && rm -f /tmp/build-base.sh
 
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends software-properties-common \
+    && add-apt-repository -y ppa:xtradeb/apps \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends chromium \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove software-properties-common 2>/dev/null || true
 
 RUN apt-get update
 
