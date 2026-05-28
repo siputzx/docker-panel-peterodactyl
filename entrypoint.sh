@@ -1,6 +1,12 @@
 #!/bin/bash
 cd /home/container || exit 1
 
+# Use container disk for temp (system /tmp is only 100MB)
+export TMPDIR=/home/container/.tmp
+export TMP=/home/container/.tmp
+export TEMP=/home/container/.tmp
+mkdir -p "${TMPDIR}" 2>/dev/null || true
+
 TZ=${TZ:-UTC}
 export TZ
 

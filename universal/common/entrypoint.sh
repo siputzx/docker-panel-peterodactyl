@@ -7,6 +7,12 @@ export LANG=C.UTF-8
 export LANGUAGE=C.UTF-8
 export LC_ALL=C.UTF-8
 
+# Use container disk for temp (system /tmp is only 100MB)
+export TMPDIR=/home/container/tokoptero-sys/tmp
+export TMP=/home/container/tokoptero-sys/tmp
+export TEMP=/home/container/tokoptero-sys/tmp
+mkdir -p "${TMPDIR}" 2>/dev/null || true
+
 TZ=${TZ:-UTC}
 export TZ
 
