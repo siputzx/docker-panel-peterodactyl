@@ -9,13 +9,22 @@ RUN apt update \
         ffmpeg iproute2 git sqlite3 libsqlite3-dev python3 python3-dev \
         ca-certificates dnsutils tzdata zip tar curl build-essential libtool \
         iputils-ping libnss3 tini gnupg wget imagemagick libcairo2-dev \
-        libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev chromium \
+        libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev \
         libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 \
         libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
         fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 \
         libatk1.0-0 libcups2 libdbus-1-3 libdrm2 libgbm1 libgtk-3-0 \
         libnspr4 libnss3 libxshmfence1 \
     && rm -rf /var/lib/apt/lists/*
+RUN ARCH="$(dpkg --print-architecture)"; 
+    if [ "$ARCH" = "amd64" ]; then 
+        mkdir -p /etc/apt/keyrings 
+        && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-linux.gpg 
+        && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list 
+        && apt-get update 
+        && apt-get install -y --no-install-recommends google-chrome-stable 
+        && rm -rf /var/lib/apt/lists/*; 
+    fi
 
 RUN mkdir -p --mode=0755 /usr/share/keyrings \
     && curl -fsSL https://pkg.cloudflare.com/cloudflare-public-v2.gpg -o /usr/share/keyrings/cloudflare-public-v2.gpg \
@@ -23,7 +32,7 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
     && apt update && apt -y install cloudflared && apt clean && rm -rf /var/lib/apt/lists/*
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome \
     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
     GO111MODULE=on \

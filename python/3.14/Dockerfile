@@ -56,6 +56,15 @@ RUN apt update \
         libnss3 \
         libxshmfence1 \
     && rm -rf /var/lib/apt/lists/*
+RUN ARCH="$(dpkg --print-architecture)"; 
+    if [ "$ARCH" = "amd64" ]; then 
+        mkdir -p /etc/apt/keyrings 
+        && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-linux.gpg 
+        && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list 
+        && apt-get update 
+        && apt-get install -y --no-install-recommends google-chrome-stable 
+        && rm -rf /var/lib/apt/lists/*; 
+    fi
 RUN mkdir -p --mode=0755 /usr/share/keyrings \
     && curl -fsSL https://pkg.cloudflare.com/cloudflare-public-v2.gpg -o /usr/share/keyrings/cloudflare-public-v2.gpg \
     && echo 'deb [signed-by=/usr/share/keyrings/cloudflare-public-v2.gpg] https://pkg.cloudflare.com/cloudflared any main' > /etc/apt/sources.list.d/cloudflared.list \
@@ -63,8 +72,17 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
     && apt -y install cloudflared \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
+RUN ARCH="$(dpkg --print-architecture)"; 
+    if [ "$ARCH" = "amd64" ]; then 
+        mkdir -p /etc/apt/keyrings 
+        && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-linux.gpg 
+        && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list 
+        && apt-get update 
+        && apt-get install -y --no-install-recommends google-chrome-stable 
+        && rm -rf /var/lib/apt/lists/*; 
+    fi
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome \
     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
