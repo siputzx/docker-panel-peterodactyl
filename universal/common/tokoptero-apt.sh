@@ -167,11 +167,11 @@ install_deb() {
     dpkg -x "$filename" "${TOKOPTERO_SYS}/" 2>/dev/null
     cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
     # Auto-symlink binaries in lib/*/bin/ to usr/bin/ (e.g. code-server)
+    # Removes wrapper scripts and replaces with direct binary symlinks
     find "${TOKOPTERO_SYS}/usr/lib" -type f -executable -path "*/bin/*" 2>/dev/null | while read -r bin; do
         name=$(basename "$bin")
-        if [ ! -f "${TOKOPTERO_SYS}/usr/bin/${name}" ]; then
-            ln -sf "$bin" "${TOKOPTERO_SYS}/usr/bin/${name}" 2>/dev/null || true
-        fi
+        rm -f "${TOKOPTERO_SYS}/usr/bin/${name}"
+        ln -sf "$bin" "${TOKOPTERO_SYS}/usr/bin/${name}" 2>/dev/null || true
     done
     cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
     cp "$filename" "${PKG_DIR}/"
