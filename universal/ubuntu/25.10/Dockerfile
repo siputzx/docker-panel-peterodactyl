@@ -10,7 +10,7 @@ COPY ./universal/common/build-base.sh /tmp/build-base.sh
 RUN chmod +x /tmp/build-base.sh && /tmp/build-base.sh "$NODE_MAJOR" && rm -f /tmp/build-base.sh
 
 RUN apt-get update \
-    && if apt-cache show chromium >/dev/null 2>&1; then apt-get install -y --no-install-recommends chromium; fi \
+    && if apt-cache show chromium >/dev/null 2>&1; then apt-get install -y --no-install-recommends chromium || true; fi \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update
