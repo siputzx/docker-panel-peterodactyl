@@ -59,12 +59,12 @@ RUN         apt update \
                 libnss3 \
                 libxshmfence1 \
             && rm -rf /var/lib/apt/lists/*
-RUN apt-get update 
-    && for pkg in chromium chromium-browser; do 
-         if apt-cache show "$pkg" >/dev/null 2>&1; then 
-           apt-get install -y --no-install-recommends "$pkg" && break; 
-         fi; 
-       done 
+RUN apt-get update  \
+    && for pkg in chromium chromium-browser; do  \
+         if apt-cache show "$pkg" >/dev/null 2>&1; then  \
+           apt-get install -y --no-install-recommends "$pkg" && break;  \
+         fi;  \
+       done  \
     && rm -rf /var/lib/apt/lists/*
 
 RUN         mkdir -p --mode=0755 /usr/share/keyrings \
