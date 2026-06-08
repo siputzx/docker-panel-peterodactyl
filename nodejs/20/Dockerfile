@@ -82,7 +82,8 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 RUN npm install -g corepack
 RUN corepack enable
-RUN corepack prepare pnpm@latest --activate && pnpm config set --global dangerouslyAllowAllBuilds true
+RUN corepack prepare pnpm@latest --activate
+RUN corepack exec pnpm -- config set --global dangerouslyAllowAllBuilds true || true
 
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 
