@@ -26,19 +26,5 @@ for chrome in /usr/bin/chromium /usr/bin/google-chrome /usr/bin/google-chrome-st
     fi
 done
 
-# Auto-approve native postinstall scripts (canvas, sharp, etc.)
-if [ -f /home/container/package.json ]; then
-    if command -v pnpm >/dev/null 2>&1; then
-        pnpm config set --location project dangerouslyAllowAllBuilds true >/tmp/pnpm-approve.log 2>&1 || true
-        pnpm approve-builds --all >>/tmp/pnpm-approve.log 2>&1 || true
-    fi
-    if command -v bun >/dev/null 2>&1; then
-        bun pm trust --all >/tmp/bun-trust.log 2>&1 || true
-    fi
-    if command -v npm >/dev/null 2>&1; then
-        npm approve-scripts --all >/tmp/npm-approve.log 2>&1 || true
-    fi
-fi
-
 printf "\033[1m\033[33m$(whoami)@$(hostname)~ \033[0m%s\n" "$STARTUP"
 eval ${STARTUP}
