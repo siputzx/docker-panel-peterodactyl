@@ -27,16 +27,14 @@ for chrome in /usr/bin/chromium /usr/bin/google-chrome /usr/bin/google-chrome-st
 done
 
 # Auto-approve native postinstall scripts (canvas, sharp, etc.)
+# All commands use timeout to prevent hanging on older versions.
 if [ -f /home/container/package.json ]; then
     if command -v pnpm >/dev/null 2>&1; then
-        pnpm config set --location project dangerouslyAllowAllBuilds true >/tmp/pnpm-approve.log 2>&1 || true
-        pnpm approve-builds --all >>/tmp/pnpm-approve.log 2>&1 || true
+        timeout 10 pnpm config set --location project dangerouslyAllowAllBuilds true >/tmp/pnpm-approve.log 2>&1 || true
+        timeout 10 pnpm approve-builds --all >>/tmp/pnpm-approve.log 2>&1 || true
     fi
     if command -v bun >/dev/null 2>&1; then
-        bun pm trust --all >/tmp/bun-trust.log 2>&1 || true
-    fi
-    if command -v npm >/dev/null 2>&1; then
-        npm approve-scripts --all >/tmp/npm-approve.log 2>&1 || true
+        timeout 10 bun pm trust --all >/tmp/bun-trust.log 2>&1 || true
     fi
 fi
 
