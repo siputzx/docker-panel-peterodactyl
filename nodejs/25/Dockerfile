@@ -83,8 +83,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     COREPACK_HOME=/usr/local/lib/corepack
 
-RUN npm install -g corepack
-RUN corepack enable
+RUN corepack enable || true
 RUN corepack prepare pnpm@latest --activate
 RUN corepack exec pnpm -- config set --global dangerouslyAllowAllBuilds true || true
 
