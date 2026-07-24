@@ -147,6 +147,8 @@ curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/opt/uv sh \
   && ln -sf /opt/uv/uvx /usr/local/bin/uvx \
   && uv python install 3.13
 
+uv tool install yt-dlp || true
+
 curl -fsSL https://bun.sh/install | env BUN_INSTALL=/opt/bun bash \
   && ln -sf /opt/bun/bin/bun /usr/local/bin/bun \
   && ln -sf /opt/bun/bin/bunx /usr/local/bin/bunx

@@ -70,9 +70,11 @@ RUN mkdir -p --mode=0755 /usr/share/keyrings \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_SKIP_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
-    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+    PIP_BREAK_SYSTEM_PACKAGES=1
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 USER container

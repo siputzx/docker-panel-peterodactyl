@@ -37,10 +37,12 @@ elif [ -x /usr/bin/google-chrome-stable ]; then
     export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 fi
 
-if command -v uv >/dev/null 2>&1; then
-    uv tool install --force yt-dlp >/tmp/yt-dlp-install.log 2>&1 || python3 -m pip install --user --no-cache-dir -U yt-dlp >>/tmp/yt-dlp-install.log 2>&1 || true
-else
-    python3 -m pip install --user --no-cache-dir -U yt-dlp >/tmp/yt-dlp-install.log 2>&1 || true
+if ! command -v yt-dlp >/dev/null 2>&1; then
+    if command -v uv >/dev/null 2>&1; then
+        uv tool install yt-dlp >/tmp/yt-dlp-install.log 2>&1 || true
+    else
+        python3 -m pip install --user --no-cache-dir yt-dlp >/tmp/yt-dlp-install.log 2>&1 || true
+    fi
 fi
 
 if command -v pnpm >/dev/null 2>&1 && [ -f /home/container/package.json ]; then

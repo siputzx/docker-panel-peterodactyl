@@ -26,5 +26,6 @@ for chrome in /usr/bin/chromium /usr/bin/google-chrome /usr/bin/google-chrome-st
     fi
 done
 
-printf "\033[1m\033[33m$(whoami)@$(hostname)~ \033[0m%s\n" "$STARTUP"
-eval ${STARTUP}
+STARTUP=${STARTUP:-/bin/bash}
+printf "\033[1m\033[33m%s@%s~ \033[0m%s\n" "$(whoami)" "$(hostname)" "$STARTUP"
+exec bash -c "$STARTUP"
