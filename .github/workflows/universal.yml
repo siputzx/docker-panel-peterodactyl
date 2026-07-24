@@ -1,0 +1,87 @@
+name: universal
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'universal/**'
+      - '.github/workflows/universal.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: universal-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - name: debian12
+            tag: debian12_universal
+            dockerfile: ./universal/debian/12/Dockerfile
+          - name: debian13
+            tag: debian13_universal
+            dockerfile: ./universal/debian/13/Dockerfile
+          - name: ubuntu22
+            tag: ubuntu22_universal
+            dockerfile: ./universal/ubuntu/22.04/Dockerfile
+          - name: ubuntu24
+            tag: ubuntu24_universal
+            dockerfile: ./universal/ubuntu/24.04/Dockerfile
+          - name: ubuntu25
+            tag: ubuntu25_universal
+            dockerfile: ./universal/ubuntu/25.10/Dockerfile
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if Dockerfile exists
+        run: |
+          if [ ! -f "${{ matrix.image.dockerfile }}" ]; then
+            echo "Dockerfile not found: ${{ matrix.image.dockerfile }}"
+            exit 1
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.image.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          pull: true
+          tags: |
+            ghcr.io/siputzx/panel:${{ matrix.image.tag }}
+          cache-from: |
+            type=gha,scope=universal${{ matrix.image.tag }}
+          cache-to: |
+            type=gha,mode=max,scope=universal${{ matrix.image.tag }}
+          provenance: false
+          sbom: false
