@@ -26,6 +26,12 @@ for chrome in /usr/bin/chromium /usr/bin/google-chrome /usr/bin/google-chrome-st
     fi
 done
 
+# Wings runs the container as the host volume owner (uid varies per node), which
+# may not exist in /etc/passwd -> shell shows "I have no name!". Register it once.
+if ! getent passwd "$(id -u)" >/dev/null 2>&1; then
+    printf 'container:x:%s:%s::/home/container:/bin/bash\n' "$(id -u)" "$(id -g)" >> /etc/passwd 2>/dev/null || true
+fi
+
 STARTUP=${STARTUP:-/bin/bash}
 printf "\033[1m\033[33m%s@%s~ \033[0m%s\n" "$(whoami)" "$(hostname)" "$STARTUP"
 if [ -n "${SSH_PASSWORD}" ] && [ -x /usr/local/bin/tokoptero-sshd ]; then

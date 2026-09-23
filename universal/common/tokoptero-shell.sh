@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# SSH sessions start a fresh login shell, so show the same banner the panel
+# console shows. Guarded so nested shells only print it once per session.
+if [ -z "${TOKOPTERO_BANNER_SHOWN:-}" ] && [ -x /usr/local/bin/tokoptero-banner ]; then
+    export TOKOPTERO_BANNER_SHOWN=1
+    /usr/local/bin/tokoptero-banner
+fi
+
 export LANG=C.UTF-8
 export LANGUAGE=C.UTF-8
 export LC_ALL=C.UTF-8
