@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'nodejs/**'
+      - 'entrypoint.sh'
       - '.github/workflows/nodejs.yml'
   workflow_dispatch:
 

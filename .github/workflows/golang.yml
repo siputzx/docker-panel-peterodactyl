@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'golang/**'
+      - 'entrypoint.sh'
       - '.github/workflows/golang.yml'
   workflow_dispatch:
 

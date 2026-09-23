@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'bun/**'
+      - 'entrypoint.sh'
       - '.github/workflows/bun.yml'
   workflow_dispatch:
 

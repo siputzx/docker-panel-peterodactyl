@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'python/**'
+      - 'entrypoint.sh'
       - '.github/workflows/python.yml'
   workflow_dispatch:
 
