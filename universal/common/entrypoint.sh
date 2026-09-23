@@ -62,7 +62,8 @@ fi
 
 # Wings runs the container as the host volume owner, a uid that does not exist in
 # /etc/passwd (and /etc is read-only), so shells show "I have no name!". Fix the
-# prompt via the writable home instead; whoami cannot be fixed in this setup.
+# prompt through the writable home. Written to .bash_profile/.profile too because
+# SSH starts a login shell, which never reads .bashrc.
 if ! grep -qs TOKOPTERO_PROMPT "${HOME}/.bashrc" 2>/dev/null; then
     {
         echo ''
@@ -70,6 +71,15 @@ if ! grep -qs TOKOPTERO_PROMPT "${HOME}/.bashrc" 2>/dev/null; then
         echo 'export PS1="\[\e[1;32m\]container@tokoptero\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ "'
     } >> "${HOME}/.bashrc" 2>/dev/null || true
 fi
+for rc in "${HOME}/.bash_profile" "${HOME}/.profile"; do
+    if ! grep -qs TOKOPTERO_PROMPT "$rc" 2>/dev/null; then
+        {
+            echo ''
+            echo '# TOKOPTERO_PROMPT'
+            echo 'export PS1="\[\e[1;32m\]container@tokoptero\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ "'
+        } >> "$rc" 2>/dev/null || true
+    fi
+done
 
 STARTUP=${STARTUP:-/bin/bash -li}
 
