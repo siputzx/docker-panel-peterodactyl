@@ -4,7 +4,10 @@ LABEL author="siputzx" maintainer="custom@pterodactyl.io"
 RUN useradd -m -d /home/container -s /bin/bash container
 STOPSIGNAL SIGINT
 
-RUN apt update \
+# ponytail: bullseye EOL 31 Agu 2026 → repo debian-security diarsipkan & pool bullseye dihapus
+# (index masih bilang +deb11u5 padahal file-nya 404). Buang source-nya: pakai debian bullseye saja.
+RUN sed -i "/debian-security/d" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null || true; \
+    apt update \
     && apt -y install \
         ffmpeg \
         iproute2 \
