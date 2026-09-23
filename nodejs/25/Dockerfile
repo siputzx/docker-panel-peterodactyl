@@ -92,6 +92,9 @@ ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
 COPY --chown=container:container ../entrypoint.sh /entrypoint.sh
+
+ARG TARGETARCH
+COPY --chown=container:container bin/tokoptero-sshd-${TARGETARCH} /usr/local/bin/tokoptero-sshd
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]

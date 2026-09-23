@@ -37,6 +37,9 @@ ENV LANG=C.UTF-8 \
     CARGO_HOME=/opt/cargo
 
 COPY --chown=container:container ./universal/common/entrypoint.sh /entrypoint.sh
+
+ARG TARGETARCH
+COPY --chown=container:container bin/tokoptero-sshd-${TARGETARCH} /usr/local/bin/tokoptero-sshd
 COPY --chown=container:container ./universal/common/tokoptero-banner.sh /usr/local/bin/tokoptero-banner
 COPY --chown=container:container ./universal/common/tokoptero-shell.sh /etc/profile.d/tokoptero-shell.sh
 COPY --chown=container:container ./universal/common/tokoptero-apt.sh /usr/local/bin/tokoptero-apt

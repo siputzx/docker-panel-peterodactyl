@@ -77,10 +77,14 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PIP_BREAK_SYSTEM_PACKAGES=1
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 COPY --chown=container:container ../entrypoint.sh /entrypoint.sh
+
+ARG TARGETARCH
+COPY --chown=container:container bin/tokoptero-sshd-${TARGETARCH} /usr/local/bin/tokoptero-sshd
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["/entrypoint.sh"]

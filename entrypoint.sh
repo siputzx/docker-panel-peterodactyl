@@ -28,4 +28,11 @@ done
 
 STARTUP=${STARTUP:-/bin/bash}
 printf "\033[1m\033[33m%s@%s~ \033[0m%s\n" "$(whoami)" "$(hostname)" "$STARTUP"
+if [ -n "${SSH_PASSWORD}" ] && [ -x /usr/local/bin/tokoptero-sshd ]; then
+    if [ -n "${SSH_PORT}" ] && [ "${SSH_PORT}" != "${SERVER_PORT}" ]; then
+        /usr/local/bin/tokoptero-sshd >>"${HOME}/.tokoptero-sshd.log" 2>&1 &
+    else
+        echo "[tokoptero] SSH dilewati: SSH_PORT kosong atau sama dengan SERVER_PORT"
+    fi
+fi
 exec bash -c "$STARTUP"
