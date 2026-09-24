@@ -65,6 +65,6 @@ jobs:
           tags: |
             ghcr.io/siputzx/panel:go_${{ matrix.go-version }}
           cache-from: type=gha,scope=golang${{ matrix.go-version }}
-          cache-to: type=gha,mode=max,scope=golang${{ matrix.go-version }}
+          cache-to: type=gha,mode=min,scope=golang${{ matrix.go-version }}
           provenance: false
           sbom: false

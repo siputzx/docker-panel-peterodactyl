@@ -66,6 +66,6 @@ jobs:
           tags: |
             ghcr.io/siputzx/panel:bun_${{ matrix.bun-version }}
           cache-from: type=gha,scope=bun${{ matrix.bun-version }}
-          cache-to: type=gha,mode=max,scope=bun${{ matrix.bun-version }}
+          cache-to: type=gha,mode=min,scope=bun${{ matrix.bun-version }}
           provenance: false
           sbom: false

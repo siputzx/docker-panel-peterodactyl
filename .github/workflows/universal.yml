@@ -82,6 +82,6 @@ jobs:
           cache-from: |
             type=gha,scope=universal${{ matrix.image.tag }}
           cache-to: |
-            type=gha,mode=max,scope=universal${{ matrix.image.tag }}
+            type=gha,mode=min,scope=universal${{ matrix.image.tag }}
           provenance: false
           sbom: false
