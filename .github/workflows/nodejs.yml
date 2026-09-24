@@ -65,6 +65,5 @@ jobs:
           tags: |
             ghcr.io/siputzx/panel:node_${{ matrix.node-version }}
           cache-from: type=gha,scope=nodejs${{ matrix.node-version }}
-          cache-to: type=gha,mode=min,scope=nodejs${{ matrix.node-version }}
           provenance: false
           sbom: false

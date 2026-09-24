@@ -65,6 +65,5 @@ jobs:
           tags: |
             ghcr.io/siputzx/panel:python_${{ matrix.python-version }}
           cache-from: type=gha,scope=python${{ matrix.python-version }}
-          cache-to: type=gha,mode=min,scope=python${{ matrix.python-version }}
           provenance: false
           sbom: false

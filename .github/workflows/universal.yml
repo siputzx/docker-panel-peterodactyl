@@ -81,7 +81,5 @@ jobs:
             ghcr.io/siputzx/panel:${{ matrix.image.tag }}
           cache-from: |
             type=gha,scope=universal${{ matrix.image.tag }}
-          cache-to: |
-            type=gha,mode=min,scope=universal${{ matrix.image.tag }}
           provenance: false
           sbom: false
