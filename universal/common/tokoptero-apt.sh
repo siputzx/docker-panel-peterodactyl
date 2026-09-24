@@ -38,9 +38,15 @@ install_pkg() {
             clean_tmp
             continue
         fi
-        dpkg --force-all -x "$deb" "${TOKOPTERO_SYS}/" 2>/dev/null
-        cp -af "${TOKOPTERO_SYS}/usr/"* /usr/ 2>/dev/null || true
-        cp "$deb" "${PKG_DIR}/"
+          dpkg --force-all -x "$deb" "${TOKOPTERO_SYS}/" 2>/dev/null
+          # Packages ship into bin, sbin, usr/bin and usr/sbin. Copying only usr/
+          # silently dropped sbin/ tools (ifconfig, netstat, ...) and the /usr
+          # copy always failed because the image root is read-only for this user.
+          mkdir -p "${TOKOPTERO_SYS}/usr/sbin" "${TOKOPTERO_SYS}/sbin" "${TOKOPTERO_SYS}/bin"
+          for d in usr/bin usr/sbin usr/local/bin usr/local/sbin sbin bin; do
+              [ -d "${TOKOPTERO_SYS}/${d}" ] && cp -af "${TOKOPTERO_SYS}/${d}/." "${TOKOPTERO_SYS}/${d}/" 2>/dev/null || true
+          done
+          cp "$deb" "${PKG_DIR}/"
         echo "${pkg}" >> "${MANIFEST}"
         sort -u "${MANIFEST}" -o "${MANIFEST}"
         clean_tmp

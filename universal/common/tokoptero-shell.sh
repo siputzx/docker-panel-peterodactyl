@@ -10,8 +10,8 @@ fi
 export LANG=C.UTF-8
 export LANGUAGE=C.UTF-8
 export LC_ALL=C.UTF-8
-export PATH="/home/container/.tokoptero/usr/bin:/home/container/.tokoptero/usr/local/bin:/home/container/.tokoptero/local/bin:${HOME}/.local/bin:${PATH}"
-export LD_LIBRARY_PATH="/home/container/.tokoptero/usr/lib:${LD_LIBRARY_PATH}"
+export PATH="/home/container/.tokoptero/sbin:/home/container/.tokoptero/bin:/home/container/.tokoptero/usr/sbin:/home/container/.tokoptero/usr/bin:/home/container/.tokoptero/usr/local/bin:/home/container/.tokoptero/local/bin:${HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH}"
+export LD_LIBRARY_PATH="/home/container/.tokoptero/usr/lib:/home/container/.tokoptero/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}"
 export HOSTNAME="tokoptero"
 export PS1='\[\e[1;32m\]container@tokoptero\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
 
