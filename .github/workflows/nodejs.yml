@@ -6,6 +6,7 @@ on:
     paths:
       - 'nodejs/**'
       - 'entrypoint.sh'
+      - 'bin/**'
       - '.github/workflows/nodejs.yml'
   workflow_dispatch:
 

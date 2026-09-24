@@ -6,6 +6,7 @@ on:
     paths:
       - 'golang/**'
       - 'entrypoint.sh'
+      - 'bin/**'
       - '.github/workflows/golang.yml'
   workflow_dispatch:
 

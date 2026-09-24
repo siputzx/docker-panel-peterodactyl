@@ -6,6 +6,7 @@ on:
     paths:
       - 'python/**'
       - 'entrypoint.sh'
+      - 'bin/**'
       - '.github/workflows/python.yml'
   workflow_dispatch:
 
