@@ -78,7 +78,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 COPY --chown=container:container ../entrypoint.sh /entrypoint.sh

@@ -90,7 +90,6 @@ RUN corepack exec pnpm -- config set --global dangerouslyAllowAllBuilds true || 
 
 RUN mkdir -p /ms-playwright && chown -R container:container /ms-playwright
 
-USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 

@@ -48,7 +48,6 @@ RUN chmod +x /entrypoint.sh /usr/local/bin/tokoptero-banner /etc/profile.d/tokop
     && mkdir -p /ms-playwright \
     && chown -R container:container /ms-playwright /opt/bun /opt/cargo /opt/rustup /opt/uv
 
-USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
