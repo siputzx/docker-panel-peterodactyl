@@ -1,85 +1,156 @@
-# Docker Panel Peterodactyl
+# Docker Panel Pterodactyl
 
-This repository provides Docker images for Pterodactyl/Jexactyl eggs.
+Production-ready Docker images for [Pterodactyl](https://pterodactyl.io) / [Jexactyl](https://jexactyl.com) eggs.
 
-## Purpose
-
-- Provide ready-to-use runtime images for common egg stacks (Node.js, Python, Go, Bun, Universal).
-- Keep images suitable for panel environments (container user, standardized entrypoint, common tooling).
-- Offer multi-arch builds (`linux/amd64`, `linux/arm64`) published to GHCR.
-
-This project only provides Docker images for eggs. You can build and maintain your own custom images and eggs if you prefer.
+Built for panel hosting: a `container` user, a standardized entrypoint, optional SSH access, and the
+common tooling bots and web apps expect (ffmpeg, git, sqlite3, build tooling, browsers).
 
 ## Image Registry
 
-All images are published under:
+All images are published to GitHub Container Registry:
 
-`ghcr.io/siputzx/panel:<tag>`
+```
+ghcr.io/siputzx/panel:<tag>
+```
+
+Images are multi-arch (`linux/amd64`, `linux/arm64`).
+
+## Available Images
+
+| Family | Tags | Use case |
+|---|---|---|
+| **Node.js** | `node_18`, `node_19`, `node_20`, `node_21`, `node_22`, `node_23`, `node_24`, `node_25`, `node_26` | JavaScript / TypeScript bots and APIs |
+| **Bun** | `bun_1.0`, `bun_1.2`, `bun_1.3`, `bun_1`, `bun_latest`, `bun_canary` | Bun runtimes |
+| **Python** | `python_3.11`, `python_3.12`, `python_3.13`, `python_3.14` | Python bots and scripts |
+| **Go** | `go_1.20` … `go_1.26` | Compiled Go services |
+| **Universal** | `debian12_universal`, `debian13_universal`, `ubuntu22_universal`, `ubuntu24_universal`, `ubuntu25_universal` | General purpose: Node + Bun + Go + Python in a single image |
 
 ## Image Sizes
 
-The following values are compressed image sizes from GHCR manifests.
+Sizes are the **uncompressed size on disk** as reported by `docker images`, i.e. how much space each
+image takes on a node once pulled. Compressed download sizes are roughly 3-4x smaller.
 
 ### Node.js
 
-| Tag | amd64 | arm64 |
-|---|---:|---:|
-| `node_18` | 699.5 MiB | 672.9 MiB |
-| `node_19` | 628.3 MiB | 596.1 MiB |
-| `node_20` | 693.7 MiB | 667.1 MiB |
-| `node_21` | 707.6 MiB | 681.4 MiB |
-| `node_22` | 702.3 MiB | 675.8 MiB |
-| `node_23` | 711.3 MiB | 684.2 MiB |
-| `node_24` | 701.8 MiB | 675.3 MiB |
-| `node_25` | 696.1 MiB | 669.8 MiB |
+| Tag | Size |
+|---|---:|
+| `node_18` | 2.74 GB |
+| `node_19` | 2.44 GB |
+| `node_20` | 2.74 GB |
+| `node_21` | 2.77 GB |
+| `node_22` | 2.75 GB |
+| `node_23` | 2.79 GB |
+| `node_24` | 2.75 GB |
+| `node_25` | 2.77 GB |
+| `node_26` | 2.76 GB |
 
 ### Bun
 
-| Tag | amd64 | arm64 |
-|---|---:|---:|
-| `bun_1.0` | 716.9 MiB | 683.1 MiB |
-| `bun_1.2` | 787.9 MiB | 760.4 MiB |
-| `bun_1.3` | 820.5 MiB | 801.5 MiB |
-| `bun_1` | 820.5 MiB | 801.5 MiB |
-| `bun_latest` | 820.5 MiB | 801.5 MiB |
-| `bun_canary` | 820.8 MiB | 801.8 MiB |
+| Tag | Size |
+|---|---:|
+| `bun_1.0` | ~2.9 GB |
+| `bun_1.2` | 2.98 GB |
+| `bun_1.3` | ~3.0 GB |
+| `bun_1` | ~3.1 GB |
+| `bun_latest` | 3.16 GB |
+| `bun_canary` | ~3.1 GB |
 
 ### Python
 
-| Tag | amd64 | arm64 |
-|---|---:|---:|
-| `python_3.11` | 781.2 MiB | 753.8 MiB |
-| `python_3.12` | 782.2 MiB | 754.7 MiB |
-| `python_3.13` | 784.1 MiB | 756.5 MiB |
+| Tag | Size |
+|---|---:|
+| `python_3.11` | 2.97 GB |
+| `python_3.12` | 2.98 GB |
+| `python_3.13` | 2.97 GB |
+| `python_3.14` | 2.98 GB |
 
 ### Go
 
-| Tag | amd64 | arm64 |
-|---|---:|---:|
-| `go_1.20` | 985.3 MiB | 948.7 MiB |
-| `go_1.21` | 952.2 MiB | 917.3 MiB |
-| `go_1.22` | 950.3 MiB | 914.8 MiB |
-| `go_1.23` | 873.4 MiB | 843.1 MiB |
-| `go_1.24` | 836.0 MiB | 805.3 MiB |
-| `go_1.24.9` | 862.2 MiB | 831.8 MiB |
-| `go_1.25` | 817.9 MiB | 788.5 MiB |
-| `go_1.25.1` | 844.0 MiB | 814.8 MiB |
+| Tag | Size |
+|---|---:|
+| `go_1.20` | ~3.1 GB |
+| `go_1.21` | ~3.1 GB |
+| `go_1.22` | ~3.1 GB |
+| `go_1.23` | ~3.0 GB |
+| `go_1.24` | ~3.0 GB |
+| `go_1.24.9` | ~3.1 GB |
+| `go_1.25` | 3.20 GB |
+| `go_1.25.1` | 3.31 GB |
+| `go_1.26` | 3.20 GB |
 
 ### Universal
 
-| Tag | amd64 | arm64 |
-|---|---:|---:|
-| `debian12_universal` | 1850.8 MiB | 1575.0 MiB |
-| `debian13_universal` | 1891.3 MiB | 1625.3 MiB |
-| `ubuntu22_universal` | 1549.4 MiB | 1271.2 MiB |
-| `ubuntu24_universal` | 1652.1 MiB | 1377.6 MiB |
-| `ubuntu25_universal` | 1691.4 MiB | 1417.9 MiB |
+| Tag | Size |
+|---|---:|
+| `debian12_universal` | 9.19 GB |
+| `debian13_universal` | 9.36 GB |
+| `ubuntu22_universal` | 8.77 GB |
+| `ubuntu24_universal` | 8.92 GB |
+| `ubuntu25_universal` | 8.92 GB |
 
-## Build and Publish
+## What's Inside
 
-GitHub Actions workflows build and publish images automatically based on folder changes.
+Every image ships with:
+
+- A non-privileged `container` user and a `/home/container` working directory.
+- A standardized entrypoint that prepares `TMPDIR`, detects the browser binary, and runs the egg
+  startup command.
+- Common tooling: `ffmpeg`, `git`, `sqlite3`, `curl`, `iproute2`, a C toolchain (for native npm
+  modules), and a Chromium build for headless automation.
+- **Optional SSH access**: when the egg variable `SSH_PASSWORD` is set, a lightweight SSH daemon
+  starts on the server's second allocation port (`SSH_PORT`). When `SSH_PASSWORD` is empty, SSH stays
+  disabled.
+- An interactive banner on the panel console and on SSH logins.
+
+## Using These Images In An Egg
+
+Point the egg's `docker_images` at the tags you want, for example:
+
+```json
+{
+  "node 20": "ghcr.io/siputzx/panel:node_20",
+  "node 22": "ghcr.io/siputzx/panel:node_22",
+  "ubuntu 24 universal": "ghcr.io/siputzx/panel:ubuntu24_universal"
+}
+```
+
+The SSH feature uses two egg variables:
+
+| Variable | Purpose | Editable by user |
+|---|---|---|
+| `SSH_PASSWORD` | Set to enable SSH. Empty disables it. | Yes |
+| `SSH_PORT` | Port SSH listens on (from an extra allocation). | No |
+
+## Build Locally
+
+```bash
+docker build -f nodejs/22/Dockerfile -t panel:node_22 .
+docker build -f universal/debian/12/Dockerfile -t panel:debian12_universal .
+```
+
+Each Dockerfile is self-contained and uses the repository root as its build context.
+
+## Automated Builds
+
+GitHub Actions rebuilds and publishes images when the relevant files change:
+
+| Workflow | Trigger paths |
+|---|---|
+| `nodejs.yml` | `nodejs/**`, `entrypoint.sh` |
+| `bun.yml` | `bun/**`, `entrypoint.sh` |
+| `python.yml` | `python/**`, `entrypoint.sh` |
+| `golang.yml` | `golang/**`, `entrypoint.sh` |
+| `universal.yml` | `universal/**` |
 
 ## Notes
 
-- Image size in your local Docker host can be larger than manifest compressed size.
-- If you use custom eggs, you can point them to these images or your own images.
+- The container user is intentionally **not pinned with `USER`**: Wings runs each container as the
+  owner of that server's volume, and that uid differs per node. Pinning a uid in the image makes the
+  container unable to write its own volume when Wings does not override it.
+- Image size on a node equals the uncompressed size above; the compressed size only affects how long
+  the initial `docker pull` takes.
+- This repository only provides images. You can build and maintain your own images and eggs instead.
+
+## License
+
+MIT
