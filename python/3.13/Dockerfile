@@ -8,6 +8,9 @@ RUN apt update \
         iproute2 \
         git \
         sqlite3 \
+        postgresql-client \
+        default-mysql-client \
+        redis-tools \
         libsqlite3-dev \
         ca-certificates \
         dnsutils \

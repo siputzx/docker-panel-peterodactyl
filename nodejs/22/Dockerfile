@@ -10,6 +10,9 @@ RUN apt update \
         iproute2 \
         git \
         sqlite3 \
+        postgresql-client \
+        default-mysql-client \
+        redis-tools \
         libsqlite3-dev \
         python3 \
         python3-dev \

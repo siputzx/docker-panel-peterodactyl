@@ -19,6 +19,7 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove software-properties-common 2>/dev/null || true
 
 RUN apt-get update
+RUN apt-get install -y --no-install-recommends postgresql-client default-mysql-client redis-tools && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m -d /home/container -s /bin/bash container
 STOPSIGNAL SIGINT

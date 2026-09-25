@@ -6,7 +6,7 @@ STOPSIGNAL SIGINT
 
 RUN apt update \
     && apt -y install \
-        ffmpeg iproute2 git sqlite3 libsqlite3-dev python3 python3-dev \
+        ffmpeg iproute2 git sqlite3 libsqlite3-dev postgresql-client default-mysql-client redis-tools python3 python3-dev \
         ca-certificates dnsutils tzdata zip tar curl build-essential libtool \
         iputils-ping libnss3 tini gnupg wget imagemagick libcairo2-dev \
         libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev \
